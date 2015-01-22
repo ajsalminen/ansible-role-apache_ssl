@@ -1,0 +1,17 @@
+---
+# Activate a number of Apache modules.
+
+- name: Install package apache2
+  action: apt pkg=apache2 state=present
+
+
+- action: file state=link src=/etc/apache2/mods-available/{{item}} path=/etc/apache2/mods-enabled/{{item}}
+  with_items:
+   - ssl.load
+   - ssl.conf
+  notify:
+   - restart apache
+
+
+- name: Ensure apache is running
+  action: service name=apache2 state=running
